@@ -1,9 +1,6 @@
 from urllib.request import urlopen, urlretrieve
-
-#from selenium import webdriver
 from bs4 import BeautifulSoup
 
-#webdriver 
 with open('./result.tsv', 'w') as rf:
     for page in range(1, 20):
         print('page: %d' % page)
@@ -18,10 +15,6 @@ with open('./result.tsv', 'w') as rf:
             test_link ='http://www.the35mm.com' + name.find('a').get('href')
             equipment_name = name.strong.a.find_all('span')[2].text.strip()
             test_soup = BeautifulSoup(urlopen(test_link), 'lxml')
-            '''
-            if test_soup.find('img', attrs={'alt': 'SOLD OUT'}).find_parent('span', class_='displaynone') and \
-            not test_soup.find('img', attrs={'alt': '바로구매하기'}).find_parent('span', class_='displaynone'):
-            '''
             if not test_soup.find('img', attrs={'alt': '바로구매하기'}).find_parent('a', class_='displaynone'):
                 rf.write('%s\t%s\tYES\n' % (equipment_name, test_link))
                 img_src = 'http:' + test_soup.find('img', class_='BigImage').get('src')
@@ -30,9 +23,3 @@ with open('./result.tsv', 'w') as rf:
             else:
                 rf.write('%s\t%s\tNO\n' % (equipment_name, test_link))
             loop_cnt += 1
-'''
-# test
-soup = BeautifulSoup(urlopen('http://www.the35mm.com/product/detail.html?product_no=7837&cate_no=24&display_group=1'), 'lxml')
-buy = soup.find('img', attrs={'alt': 'SOLD OUT'}).find_parent('span', class_='displaynone')
-print(buy)
-'''
