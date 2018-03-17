@@ -1,5 +1,10 @@
+import os
 from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
+
+RESULT_PATH = os.path.join('.', 'yes_imgs')
+if not os.path.exists(RESULT_PATH):
+    os.mkdir(RESULT_PATH)
 
 with open('./result.tsv', 'w') as rf:
     for page in range(1, 20):
@@ -19,7 +24,7 @@ with open('./result.tsv', 'w') as rf:
                 rf.write('%s\t%s\tYES\n' % (equipment_name, test_link))
                 img_src = 'http:' + test_soup.find('img', class_='BigImage').get('src')
                 img_name = equipment_name.replace('.', '_').replace('?', '_').replace('!', '_').replace('/', '_') + '.jpg'
-                urlretrieve(img_src, './yes_imgs/'+img_name)
+                urlretrieve(img_src, os.path.join(RESULT_PATH, img_name))
             else:
                 rf.write('%s\t%s\tNO\n' % (equipment_name, test_link))
             loop_cnt += 1
